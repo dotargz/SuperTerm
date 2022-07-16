@@ -89,7 +89,7 @@ class Terminal(pygame.sprite.Sprite):
         self.BLACK = (0, 0, 0)
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
-        self.VERSION = "0.4.2α"
+        self.VERSION = "0.4.3α"
         self.NAME = "SuperTerm αlpha"
         pygame.display.set_caption(f"{self.NAME} {self.VERSION}")
         self.FONT_SIZE = 14
