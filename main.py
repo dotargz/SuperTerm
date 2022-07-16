@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-try:
-    os.system("pip install -r requirements.txt")
-except:
-    os.system("pip install pygame requests pyperclip pythonping")
+os.system("pip install pygame requests pyperclip pythonping")
 import sys
 import pygame
 import json
@@ -204,7 +201,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "kill"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -296,6 +293,12 @@ class Terminal(pygame.sprite.Sprite):
                             return_text += f"- No updates available.\n"
                     except Exception as e:
                         return_text = "Error: Could not check for updates.\n"
+                elif command == "st":
+                    os.system(f"start {os.path.basename(__file__)}")
+                    if "-s" not in command_flags:
+                        return_text = f"Running SuperTerm...\n"
+                    else:
+                        return_text = ""
                 else:
                     return_text = "Error: Command handler not found.\n"
             else:
