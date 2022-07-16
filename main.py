@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-try:
-    os.system("pip install -r requirements.txt")
-except:
-    os.system("pip install pygame requests pyperclip pythonping")
+os.system("pip install pygame requests pyperclip pythonping")
 import sys
 import pygame
 import json
+import platform
 import requests
 import pyperclip as pc
 import re
@@ -73,10 +71,18 @@ if STANDALONE:
     print("[WARNING] Running in Standalone Mode")
     print("Please run this program from the executable for the best results")
 
+if platform.system() != "Windows":
+    print("[WARNING] Running on a non-Windows OS")
+    print("Please run this program from the executable for the best results")
+    WINDOWS = False
+else:
+    WINDOWS = True
 
 class Terminal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        global STANDALONE
+        global NOTWINDOWS
         self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
         self.GREEN = (0, 255, 0)
@@ -95,11 +101,12 @@ class Terminal(pygame.sprite.Sprite):
         self.history = []
         self.history_count = 0
         self.current_input = ""
+        self.warning = ""
+        if WINDOWS == False:
+            self.warning += '\n[ WARN ] Non-Windows OS detected.\n[ NON-WINDOWS ] The terminal will not be able to run properly on non-Windows operating systems.'
         if STANDALONE == True:
-            warning = '\n[ WARN ] Standalone mode enabled.\n[ STANDALONE ] Downloading assets...\n\nWARNING: YOU ARE RUNNING SUPERTERM AS A STANDALONE PYTHON FILE,\nTHE TERMINAL WILL REQUIRE A INTERNET CONNECTION TO WORK AS EXPECTED.\nTO RELOAD THE TERMINAL AND ITS ASSETS, RUN THE COMMAND "RELOAD".'
-        else:
-            warning = ''
-        self.current_display = f"{self.NAME} [Version {self.VERSION}]\n(c) 2022 OneSpark LLC. All rights reserved.{warning}\n\n"
+            self.warning += '\n[ WARN ] Standalone mode enabled.\n[ STANDALONE ] Downloading assets...\n\nWARNING: YOU ARE RUNNING SUPERTERM AS A STANDALONE PYTHON FILE,\nTHE TERMINAL WILL REQUIRE A INTERNET CONNECTION TO WORK AS EXPECTED.\nTO RELOAD THE TERMINAL AND ITS ASSETS, RUN THE COMMAND "RELOAD".'
+        self.current_display = f"{self.NAME} [Version {self.VERSION}]\n(c) 2022 OneSpark LLC. All rights reserved.{self.warning}\n\n"
 
     def load_font(self, isReloading=False):
         global FONT
@@ -204,7 +211,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -238,7 +245,7 @@ class Terminal(pygame.sprite.Sprite):
                     exit()
                 elif command == "help":
                     return_text = f"Commands: {list_commands}\n"
-                elif command == "run":
+                elif command == "run" and WINDOWS == True:
                     if "".join(command_params).replace(" ", "") == "":
                         return_text = "Error: No file specified.\n"
                     else:
@@ -296,8 +303,17 @@ class Terminal(pygame.sprite.Sprite):
                             return_text += f"- No updates available.\n"
                     except Exception as e:
                         return_text = "Error: Could not check for updates.\n"
+                elif command == "st" and WINDOWS == True:
+                    os.system(f"start {os.path.basename(__file__)}")
+                    if "-s" not in command_flags:
+                        return_text = f"Running SuperTerm...\n"
+                    else:
+                        return_text = ""
+                
                 else:
                     return_text = "Error: Command handler not found.\n"
+                    if WINDOWS == False:
+                        return_text += "Notice: Some commands may not work on Linux or MacOS.\n"
             else:
                 return_text = f"Error: Command '{normal_command}' not found.\n"
             if sandbox == False:
