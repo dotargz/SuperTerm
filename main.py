@@ -9,6 +9,7 @@ import requests
 import pyperclip as pc
 import re
 import time
+import random
 import shlex
 import pythonping
 import os
@@ -83,6 +84,7 @@ class System(pygame.sprite.Sprite):
         self.BLACK = (0, 0, 0)
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
+        self.stoutsound = pygame.mixer.Sound(resource_path("assets/audio/stdout.wav"))
         self.VERSION = "0.1.0α"
         self.NAME = "SuperBIOS αlpha"
         self.ticks = 0
@@ -103,22 +105,26 @@ class System(pygame.sprite.Sprite):
         self.current_display = f"{self.NAME} [Version {self.VERSION}]\n\n"
 
     def update(self, checkY=True):
-        SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
-        global SYSFONT
-        SYSFONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
-        global bootlist
-        self.current_display += self.bootlist[self.ticks] + "\n"
-        if checkY == False:
-            self.blit_text(DISPLAYSURF, self.current_display +
-                           "\n", (5, self.user_y_offset), SYSFONT, self.WHITE)
-        else:
-            self.blit_text(DISPLAYSURF, self.current_display +
-                           "\n", (5, self.y_offset), SYSFONT, self.WHITE, True)
-        if self.ticks >= self.maxticks-1:
+        if self.ticks >= self.maxticks/(1+random.random()):
             global INBIOS
             INBIOS = False
+            time.sleep(random.random()*0.5)
         else:
             self.ticks += 1
+            time.sleep(random.random()/15)
+            SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
+            global SYSFONT
+            SYSFONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
+            global bootlist
+            self.current_display += self.bootlist[self.ticks] + "\n"
+            if checkY == False:
+                self.blit_text(DISPLAYSURF, self.current_display +
+                            "\n", (5, self.user_y_offset), SYSFONT, self.WHITE)
+            else:
+                self.blit_text(DISPLAYSURF, self.current_display +
+                            "\n", (5, self.y_offset), SYSFONT, self.WHITE, True)
+            
+            pygame.mixer.Sound.play(self.stoutsound)
 
     def blit_text(self, surface, text, pos, font, color=pygame.Color(0, 0, 0), checkY=False):
         # 2D array where each row is a list of words.
@@ -169,6 +175,10 @@ class Terminal(pygame.sprite.Sprite):
         self.history = []
         self.history_count = 0
         self.current_input = ""
+        self.stoutsound = pygame.mixer.Sound(resource_path("assets/audio/stdout.wav"))
+        self.stinsound = pygame.mixer.Sound(resource_path("assets/audio/stdin.wav"))
+        self.startupsound = pygame.mixer.Sound(resource_path("assets/audio/win11start.wav"))
+        self.hasplayedstartup = False
         self.warning = ""
         if WINDOWS == False:
             self.warning += '\n[ WARN ] Non-Windows OS detected.\n[ NON-WINDOWS ] The terminal will not be able to run properly on non-Windows operating systems.'
@@ -210,6 +220,9 @@ class Terminal(pygame.sprite.Sprite):
             STANDALONE = True
 
     def update(self, checkY=False):
+        if self.hasplayedstartup == False:
+            pygame.mixer.Sound.play(self.startupsound)
+            self.hasplayedstartup = True
         SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
         if self.cursor_blinking == True:
             cursor_char = ""
@@ -402,6 +415,7 @@ class Terminal(pygame.sprite.Sprite):
                             notFirst = True
                         else:
                             self.current_display += return_text
+                pygame.mixer.Sound.play(TERMINAL.stoutsound)
         if sandbox == True:
             return return_text
 
@@ -498,8 +512,8 @@ TERMINAL = Terminal()
 while Running:
     # Event handling
     for event in pygame.event.get():
-        if INBIOS != True:
-            if event.type == pygame.KEYDOWN:
+        if INBIOS == False:
+            if event.type == pygame.KEYUP:
                 mods = pygame.key.get_mods()
                 if event.key == pygame.K_RETURN:
                     TERMINAL.run_command(TERMINAL.current_input)
@@ -511,6 +525,7 @@ while Running:
                         TERMINAL.current_input = TERMINAL.current_input[:-1]
                     except:
                         TERMINAL.current_input = ""
+                    pygame.mixer.Sound.play(TERMINAL.stinsound)
                 elif event.key == pygame.K_SPACE:
                     TERMINAL.current_input = TERMINAL.current_input + " "
                 elif event.key == pygame.K_ESCAPE:
@@ -534,6 +549,7 @@ while Running:
                         else:
                             TERMINAL.current_input = TERMINAL.current_input + \
                                 pygame.key.name(event.key)
+                            pygame.mixer.Sound.play(TERMINAL.stinsound)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 3:
                     TERMINAL.current_input += pc.paste()
@@ -552,10 +568,14 @@ while Running:
 
     DISPLAYSURF.fill(TERMINAL.NOTBLACK)
 
-    if INBIOS == True:
-        BIOS.update()
-    else:
+    INBOOTSCREEN = False
+    if INBIOS == False:
         TERMINAL.update()
+    else:
+        if INBOOTSCREEN == True:
+            BOOTSCREEN.update()
+        else:
+            BIOS.update()
 
     SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
 
