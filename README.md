@@ -7,7 +7,7 @@ To use SuperTerm, input commands into the main interface. You can view a list of
 # Building & Compiling from source
 To compile SuperTerm, do the following:
 - Clone this repo using ``git clone https://github.com/dotargz/superterm.git``
-- Create a VENV named ``super_env`` using ``python -m venv super_env```
+- Create a VENV named ``super_env`` using ``python -m venv super_env``
 - Activate the VENV using the script found in ``super_env/Scripts`` (bat or sh depending on OS)
 - Install PyInstaller using ``pip install pyinstaller``
 - Run ``pyinstaller main.spec``. 
