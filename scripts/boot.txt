@@ -1,0 +1,251 @@
+------------ SuperTerm Boot System v0 ------------
+[  OK  ] Started Show Plymouth Boot Screen.
+[  OK  ] Started Forward Password R…s to Plymouth Directory Watch.
+[  OK  ] Reached target Path Units.
+[  OK  ] Reached target Basic System.
+[  OK  ] Found device PLEXTOR_PX-128M3 SYSTEM.
+[  OK  ] Reached target Initrd Root Device.
+[  OK  ] Finished dracut initqueue hook.
+[  OK  ] Reached target Preparation for Remote File Systems.
+[  OK  ] Reached target Remote File Systems.
+         Starting File System Check…089e-4317-9ad5-2678ecf77029...
+[  OK  ] Finished File System Check…7-089e-4317-9ad5-2678ecf77029.
+         Mounting /sysroot...
+[  OK  ] Mounted /sysroot.
+[  OK  ] Reached target Initrd Root File System.
+         Starting Reload Configuration from the Real Root...
+[  OK  ] Finished Reload Configuration from the Real Root.
+[  OK  ] Reached target Initrd File Systems.
+[  OK  ] Reached target Initrd Default Target.
+         Starting Cleaning Up and Shutting Down Daemons...
+[  OK  ] Stopped target Initrd Default Target.
+[  OK  ] Stopped target Basic System.
+[  OK  ] Stopped target Initrd Root Device.
+[  OK  ] Stopped target Initrd /usr File System.
+[  OK  ] Stopped target Path Units.
+[  OK  ] Stopped target Remote File Systems.
+[  OK  ] Stopped target Preparation for Remote File Systems.
+[  OK  ] Stopped target Slice Units.
+[  OK  ] Stopped target Socket Units.
+[  OK  ] Stopped target System Initialization.
+[  OK  ] Stopped target Swaps.
+[  OK  ] Stopped target Timer Units.
+[  OK  ] Stopped dracut initqueue hook.
+         Starting Tell haveged about new root...
+         Starting Plymouth switch root service...
+[  OK  ] Stopped Apply Kernel Variables.
+[  OK  ] Stopped Load Kernel Modules.
+[  OK  ] Stopped Create Volatile Files and Directories.
+[  OK  ] Stopped target Local File Systems.
+[  OK  ] Stopped Coldplug All udev Devices.
+         Stopping Rule-based Manage…for Device Events and Files...
+[  OK  ] Finished Cleaning Up and Shutting Down Daemons.
+[  OK  ] Stopped Rule-based Manager for Device Events and Files.
+[  OK  ] Closed udev Control Socket.
+[  OK  ] Closed udev Kernel Socket.
+[  OK  ] Stopped dracut pre-udev hook.
+[  OK  ] Stopped dracut cmdline hook.
+[  OK  ] Stopped dracut ask for additional cmdline parameters.
+         Starting Cleanup udev Database...
+[  OK  ] Stopped Create Static Device Nodes in /dev.
+[  OK  ] Stopped Create List of Static Device Nodes.
+[  OK  ] Finished Cleanup udev Database.
+[  OK  ] Finished Tell haveged about new root.
+[  OK  ] Reached target Switch Root.
+[  OK  ] Finished Plymouth switch root service.
+         Starting Switch Root...
+[  OK  ] Stopped Switch Root.
+[  OK  ] Created slice Virtual Machine and Container Slice.
+[  OK  ] Created slice Slice /system/getty.
+[  OK  ] Created slice Slice /system/modprobe.
+[  OK  ] Created slice Slice /system/systemd-fsck.
+[  OK  ] Created slice User and Session Slice.
+[  OK  ] Set up automount Arbitrary…s File System Automount Point.
+[  OK  ] Stopped target Switch Root.
+[  OK  ] Stopped target Initrd File Systems.
+[  OK  ] Stopped target Initrd Root File System.
+[  OK  ] Reached target Slice Units.
+[  OK  ] Reached target System Time Set.
+[  OK  ] Reached target Local Verity Protected Volumes.
+[  OK  ] Listening on Device-mapper event daemon FIFOs.
+[  OK  ] Listening on LVM2 poll daemon socket.
+[  OK  ] Listening on Process Core Dump Socket.
+[  OK  ] Listening on initctl Compatibility Named Pipe.
+[  OK  ] Listening on udev Control Socket.
+[  OK  ] Listening on udev Kernel Socket.
+         Activating swap /dev/disk/…9816-459c-8d43-6f2656c7fa0a...
+         Mounting Huge Pages File System...
+         Mounting POSIX Message Queue File System...
+         Mounting Kernel Debug File System...
+         Mounting Kernel Trace File System...
+         Starting Load AppArmor profiles...
+         Starting Create List of Static Device Nodes...
+         Starting Monitoring of LVM…meventd or progress polling...
+         Starting Load Kernel Module configfs...
+         Starting Load Kernel Module drm...
+         Starting Load Kernel Module fuse...
+[  OK  ] Stopped Show Plymouth Boot Screen.
+[  OK  ] Reached target Local Encrypted Volumes.
+[  OK  ] Stopped Plymouth switch root service.
+[  OK  ] Stopped Journal Service.
+[  OK  ] Listening on Syslog Socket.
+[  OK  ] Stopped Entropy Daemon based on the HAVEGE algorithm.
+         Starting Journal Service...
+         Starting Load Kernel Modules...
+         Starting Remount Root and Kernel File Systems...
+         Starting Coldplug All udev Devices...
+[  OK  ] Activated swap /dev/disk/b…9-9816-459c-8d43-6f2656c7fa0a.
+[  OK  ] Mounted Huge Pages File System.
+[  OK  ] Mounted POSIX Message Queue File System.
+[  OK  ] Mounted Kernel Debug File System.
+[  OK  ] Mounted Kernel Trace File System.
+[  OK  ] Finished Create List of Static Device Nodes.
+[  OK  ] Finished Load Kernel Module configfs.
+[  OK  ] Finished Load Kernel Module drm.
+[  OK  ] Finished Load Kernel Module fuse.
+[  OK  ] Reached target Swaps.
+         Mounting FUSE Control File System...
+         Mounting Kernel Configuration File System...
+         Mounting Temporary Directory /tmp...
+[  OK  ] Mounted FUSE Control File System.
+[  OK  ] Mounted Kernel Configuration File System.
+[  OK  ] Mounted Temporary Directory /tmp.
+[  OK  ] Finished Monitoring of LVM… dmeventd or progress polling.
+[  OK  ] Finished Load Kernel Modules.
+         Starting Apply Kernel Variables for 5.15.8-1-default...
+[  OK  ] Started Journal Service.
+[  OK  ] Finished Remount Root and Kernel File Systems.
+         Starting Flush Journal to Persistent Storage...
+         Starting Load/Save Random Seed...
+         Starting Create Static Device Nodes in /dev...
+[  OK  ] Finished Flush Journal to Persistent Storage.
+[  OK  ] Finished Apply Kernel Variables for 5.15.8-1-default.
+         Starting Apply Kernel Variables...
+[  OK  ] Finished Load AppArmor profiles.
+[  OK  ] Finished Load/Save Random Seed.
+[  OK  ] Finished Create Static Device Nodes in /dev.
+[  OK  ] Reached target Preparation for Local File Systems.
+         Starting File System Check…6895-4a09-9aac-4412f3e46349...
+         Starting File System Check…9ec4-460e-ae25-83870db3baad...
+         Starting File System Check…850d-45e0-a3ef-38a5a69268c7...
+         Starting Rule-based Manage…for Device Events and Files...
+[  OK  ] Finished Apply Kernel Variables.
+[  OK  ] Finished Coldplug All udev Devices.
+[  OK  ] Finished File System Check…3-850d-45e0-a3ef-38a5a69268c7.
+         Mounting /home...
+[  OK  ] Mounted /home.
+[  OK  ] Started Rule-based Manager for Device Events and Files.
+[  OK  ] Finished File System Check…4-9ec4-460e-ae25-83870db3baad.
+         Mounting /mnt/PX256...
+[  OK  ] Mounted /mnt/PX256.
+[  OK  ] Finished File System Check…f-6895-4a09-9aac-4412f3e46349.
+         Mounting /mnt/DATA...
+[  OK  ] Mounted /mnt/DATA.
+[  OK  ] Reached target Local File Systems.
+         Starting Restore /run/initramfs on shutdown...
+         Starting Early Kernel Boot Messages...
+         Starting Tell Plymouth To Write Out Runtime Data...
+         Starting Create Volatile Files and Directories...
+[  OK  ] Finished Restore /run/initramfs on shutdown.
+[  OK  ] Finished Tell Plymouth To Write Out Runtime Data.
+[  OK  ] Finished Create Volatile Files and Directories.
+         Starting Security Auditing Service...
+[  OK  ] Started Entropy Daemon based on the HAVEGE algorithm.
+[  OK  ] Started Security Auditing Service.
+         Starting Record System Boot/Shutdown in UTMP...
+[  OK  ] Finished Record System Boot/Shutdown in UTMP.
+[  OK  ] Reached target System Initialization.
+[  OK  ] Started Watch /etc/sysconfig/btrfsmaintenance.
+[  OK  ] Started Watch for changes in CA certificates.
+[  OK  ] Started CUPS Scheduler.
+[  OK  ] Started Daily Cleanup of Snapper Snapshots.
+[  OK  ] Started Daily Cleanup of Temporary Directories.
+[  OK  ] Reached target Path Units.
+[  OK  ] Listening on Avahi mDNS/DNS-SD Stack Activation Socket.
+[  OK  ] Listening on CUPS Scheduler.
+[  OK  ] Listening on D-Bus System Message Bus Socket.
+[  OK  ] Listening on Open-iSCSI iscsid Socket.
+[  OK  ] Listening on Libvirt local socket.
+[  OK  ] Listening on Libvirt admin socket.
+[  OK  ] Listening on Libvirt local read-only socket.
+[  OK  ] Listening on PC/SC Smart Card Daemon Activation Socket.
+[  OK  ] Listening on Virtual machine lock manager socket.
+[  OK  ] Listening on Virtual machine log manager socket.
+[  OK  ] Reached target Socket Units.
+[  OK  ] Reached target Basic System.
+         Starting auditd rules generation...
+         Starting Avahi mDNS/DNS-SD Stack...
+[  OK  ] Started D-Bus System Message Bus.
+[  OK  ] Started irqbalance daemon.
+         Starting Generate issue file for login session...
+         Starting Apply settings from /etc/sysconfig/keyboard...
+         Starting Machine Check Exception Logging Daemon...
+         Starting Name Service Cache Daemon...
+         Starting Authorization Manager...
+         Starting System Logging Service...
+         Starting Self Monitoring a…g Technology (SMART) Daemon...
+         Starting Virtual Machine a…tainer Registration Service...
+[  OK  ] Finished Early Kernel Boot Messages.
+[  OK  ] Started Name Service Cache Daemon.
+[  OK  ] Reached target Host and Network Name Lookups.
+[  OK  ] Reached target User and Group Name Lookups.
+         Starting User Login Management...
+[  OK  ] Started Machine Check Exception Logging Daemon.
+         Starting Save/Restore Sound Card State...
+[  OK  ] Finished Generate issue file for login session.
+[  OK  ] Finished Save/Restore Sound Card State.
+         Starting Load extra kernel modules for sound stuff...
+[  OK  ] Finished Load extra kernel modules for sound stuff.
+[  OK  ] Reached target Sound Card.
+[  OK  ] Finished auditd rules generation.
+[  OK  ] Started System Logging Service.
+[  OK  ] Finished Apply settings from /etc/sysconfig/keyboard.
+[  OK  ] Started Virtual Machine an…ontainer Registration Service.
+[  OK  ] Started User Login Management.
+[  OK  ] Started Avahi mDNS/DNS-SD Stack.
+[  OK  ] Started Authorization Manager.
+         Starting Modem Manager...
+         Starting firewalld - dynamic firewall daemon...
+[  OK  ] Started Modem Manager.
+[  OK  ] Started Self Monitoring an…ing Technology (SMART) Daemon.
+[  OK  ] Started firewalld - dynamic firewall daemon.
+[  OK  ] Reached target Preparation for Network.
+         Starting Network Manager...
+[  OK  ] Started Network Manager.
+[  OK  ] Reached target Network.
+[  OK  ] Reached target Network is Online.
+         Starting NTP client/server...
+         Starting CUPS Scheduler...
+         Starting Login and scanning of iSCSI devices...
+         Starting Samba SMB Daemon...
+         Starting Hostname Service...
+[  OK  ] Finished Login and scanning of iSCSI devices.
+[  OK  ] Reached target Remote File Systems.
+         Starting Virtualization daemon...
+         Starting Permit User Sessions...
+[  OK  ] Started CUPS Scheduler.
+[  OK  ] Finished Permit User Sessions.
+         Starting Hold until boot process finishes up...
+[  OK  ] Started NTP client/server.
+[  OK  ] Reached target System Time Synchronized.
+[  OK  ] Started Backup of RPM database.
+[  OK  ] Started Backup of /etc/sysconfig.
+[  OK  ] Started Balance block groups on a btrfs filesystem.
+[  OK  ] Started Scrub btrfs filesystem, verify block checksums.
+[  OK  ] Started Check if mainboard battery is Ok.
+[  OK  ] Started Discard unused blocks once a week.
+[  OK  ] Started Daily rotation of log files.
+[  OK  ] Started Daily man-db regeneration.
+[  OK  ] Started Timeline of Snapper Snapshots.
+[  OK  ] Started daily update of the root trust anchor for DNSSEC.
+[  OK  ] Reached target Timer Units.
+[  OK  ] Started Command Scheduler.
+         Starting X Display Manager...
+[  OK  ] Started Hostname Service.
+[  OK  ] Listening on Load/Save RF …itch Status /dev/rfkill Watch.
+         Starting Network Manager Script Dispatcher Service...
+[  OK  ] Started Network Manager Script Dispatcher Service.
+         Starting Locale Service...
+[  OK  ] Started Virtualization daemon.
+[  OK  ] Started Samba SMB Daemon.
+[  OK  ] Started Locale Service.
