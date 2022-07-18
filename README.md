@@ -12,3 +12,8 @@ To compile SuperTerm, do the following:
 - Install PyInstaller using ``pip install pyinstaller``
 - Run ``pyinstaller main.spec``. 
 - The executible *should* be in ``dist/``
+
+## Disclaimers
+- When running the program in any form (including the compiled version), pip is ran to insure every library is installed.
+- When running the program by itself (the python file), [Cloudinary](https://cloudinary.com) is used to fetch needed assets and a warning is displayed to the user.
+
