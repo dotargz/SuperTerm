@@ -14,6 +14,7 @@ try:
     import random
     import shlex
     import pythonping
+    import socket as s
 except:
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
     os.system("pip install pygame requests pyperclip pythonping")
@@ -300,7 +301,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -369,6 +370,25 @@ class Terminal(pygame.sprite.Sprite):
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                     except RuntimeError:
+                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
+                elif command == "nslookup":
+                    try:
+                        host = command_params[0]
+                        ipv4 = s.gethostbyname(host)
+                        ipv6_data = s.getaddrinfo(host, "7") # echo port
+                        result = ""
+                        result += f"Server:                {ipv4}\n"
+                        result += f"Address:                {ipv4}#7\n"
+                        result += f"\n"
+                        result += f"Non-authoritative answer:\n"
+                        result += f"Name:                {host.lower()}\n"
+                        result += f"Address:                {ipv4}\n"
+                        result += f"Name:                {host.lower()}\n"
+                        result += f"Address:                {str(ipv6_data[0][4][0])}\n"
+                        return_text += result
+                    except IndexError:
+                        return_text += "Error: No url specified\n"
+                    except s.gaierror:
                         return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
                 elif command == "update":
                     r = requests.get(
