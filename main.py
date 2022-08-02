@@ -301,7 +301,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -367,6 +367,13 @@ class Terminal(pygame.sprite.Sprite):
                             command_params[0], verbose=True, size=2)
                         for response in ping_list:
                             return_text += f"{response}\n"
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
+                    except RuntimeError:
+                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
+                elif command == "hostname":
+                    try:
+                        return_text += s.gethostname()
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                     except RuntimeError:
