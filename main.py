@@ -383,8 +383,8 @@ class Terminal(pygame.sprite.Sprite):
                 elif command == "time":
                     try:
                         now = datetime.datetime.now()
-                        current_time = now.strftime("%H:%M:%S")
-                        formated_time = current_time + '.' + str(random.randrange(0,59))
+                        current_time = now.strftime("%H:%M:%S") # uses a combination of real time and random for the nanoseconds
+                        formated_time = current_time + '.' + str(random.randrange(0,59)) # real nanoseconds would likely be offset anyways
                         return_text += f"The current time is: {formated_time}\n"
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
