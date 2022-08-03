@@ -15,6 +15,8 @@ try:
     import shlex
     import pythonping
     import socket as s
+    import datetime
+    import random
 except:
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
     os.system("pip install pygame requests pyperclip pythonping")
@@ -301,7 +303,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname", "time"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -378,6 +380,14 @@ class Terminal(pygame.sprite.Sprite):
                         return_text += "Error: ICMP Permission denied.\n"
                     except RuntimeError:
                         return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
+                elif command == "time":
+                    try:
+                        now = datetime.datetime.now()
+                        current_time = now.strftime("%H:%M:%S")
+                        formated_time = current_time + '.' + str(random.randrange(0,59))
+                        return_text += f"The current time is: {formated_time}\n"
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
                 elif command == "nslookup":
                     try:
                         host = command_params[0]
