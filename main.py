@@ -181,6 +181,7 @@ class Terminal(pygame.sprite.Sprite):
         self.y_offset = 5
         self.user_y_offset = self.y_offset
         self.history = []
+        self.history = self.load_history()
         self.history_count = 0
         self.current_input = ""
         self.stoutsound = pygame.mixer.Sound(
@@ -229,6 +230,14 @@ class Terminal(pygame.sprite.Sprite):
                 FONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
                 print("Failed to download FiraCode-Regular.ttf ")
             STANDALONE = True
+
+    def load_history(self):
+        # Loads all saved history
+        persistent_history = resource_path("assets/data/history.json")
+        temp_history = []
+        with open(persistent_history, 'r') as f:
+            temp_history = json.load(f)
+        return temp_history
 
     def update(self, checkY=False):
         if self.hasplayedstartup == False:
