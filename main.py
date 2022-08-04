@@ -303,7 +303,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname", "time"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname", "time", "date"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -386,6 +386,13 @@ class Terminal(pygame.sprite.Sprite):
                         current_time = now.strftime("%H:%M:%S") # uses a combination of real time and random for the nanoseconds
                         formated_time = current_time + '.' + str(random.randrange(0,59)) # real nanoseconds would likely be offset anyways
                         return_text += f"The current time is: {formated_time}\n"
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
+                elif command == "date":
+                    try:
+                        now = datetime.datetime.now()
+                        current_date = now.strftime("%a %m/%d/%y")
+                        return_text += f"The current date is: {current_date}\n"
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                 elif command == "nslookup":
