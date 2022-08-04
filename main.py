@@ -181,9 +181,9 @@ class Terminal(pygame.sprite.Sprite):
         self.y_offset = 5
         self.user_y_offset = self.y_offset
         self.history = []
-        self.history = self.load_history()
         self.history_count = 0
         self.history_persistent = True
+        self.load_history()
         self.current_input = ""
         self.stoutsound = pygame.mixer.Sound(
             resource_path("assets/audio/stdout.wav"))
@@ -235,12 +235,10 @@ class Terminal(pygame.sprite.Sprite):
     def load_history(self):
         # Loads all saved history
         if not self.history_persistent:
-            return []
+            return
         persistent_history = resource_path("assets/data/history.json")
-        temp_history = []
         with open(persistent_history, 'r') as f:
-            temp_history = json.load(f)
-        return temp_history
+            self.history = json.load(f)
 
     def save_history(self):
         # Saves any new history
@@ -355,6 +353,7 @@ class Terminal(pygame.sprite.Sprite):
                     global Running
                     print('[ INFO ] Exiting...')
                     Running = False
+                    self.save_history() # Since otherwise it wouldn't be auto-saved
                     pygame.quit()
                     sys.exit()
                     exit()
@@ -471,7 +470,6 @@ class Terminal(pygame.sprite.Sprite):
                     return_text = "Error: Command handler not found.\n"
                     if WINDOWS == False:
                         return_text += "Notice: Some commands may not work on Linux or MacOS.\n"
-                self.save_history() # Runs after any commands are ran
             else:
                 return_text = f"Error: Command '{normal_command}' not found.\n"
             if sandbox == False:
@@ -496,6 +494,7 @@ class Terminal(pygame.sprite.Sprite):
                     
         if sandbox == True:
             return return_text
+        self.save_history() # Runs after any commands are ran
 
     def clear(self):
         self.current_display = ""
