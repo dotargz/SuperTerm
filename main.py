@@ -94,8 +94,8 @@ class System(pygame.sprite.Sprite):
         self.WHITE = (255, 255, 255)
         self.stoutsound = pygame.mixer.Sound(
             resource_path("assets/audio/stdout.wav"))
-        self.VERSION = "0.1.1α"
-        self.NAME = "SuperBIOS αlpha"
+        self.VERSION = "1.0.0β"
+        self.NAME = "SuperBIOS βeta"
         self.ticks = 0
         self.FONT_SIZE = 14
         self.y_offset = 5
