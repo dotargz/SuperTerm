@@ -14,6 +14,9 @@ try:
     import random
     import shlex
     import pythonping
+    import socket as s
+    import datetime
+    import random
 except:
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
     os.system("pip install pygame requests pyperclip pythonping")
@@ -179,6 +182,8 @@ class Terminal(pygame.sprite.Sprite):
         self.user_y_offset = self.y_offset
         self.history = []
         self.history_count = 0
+        self.history_persistent = True
+        self.load_history()
         self.current_input = ""
         self.stoutsound = pygame.mixer.Sound(
             resource_path("assets/audio/stdout.wav"))
@@ -226,6 +231,25 @@ class Terminal(pygame.sprite.Sprite):
                 FONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
                 print("Failed to download FiraCode-Regular.ttf ")
             STANDALONE = True
+
+    def load_history(self):
+        # Loads all saved history
+        if not self.history_persistent:
+            return
+        persistent_history = resource_path("assets/data/history.json")
+        with open(persistent_history, 'r') as f:
+            self.history = json.load(f)
+
+    def save_history(self):
+        # Saves any new history
+        if not self.history_persistent:
+            return
+        persistent_history = resource_path("assets/data/history.json")
+        with open(persistent_history, 'w') as f:
+            try:
+                json.dump(self.history, f)
+            except:
+                print("Error: Writing to terminal history")
 
     def update(self, checkY=False):
         if self.hasplayedstartup == False:
@@ -300,7 +324,7 @@ class Terminal(pygame.sprite.Sprite):
             print("Commnd length: " + str(len(tokenized)))
             # list of valid commands
             vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st"]
+                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname", "time", "date"]
             command_alias = ["cls"]
             # format the commands in various ways
             list_commands = ", ".join(vaild_commands)
@@ -329,6 +353,7 @@ class Terminal(pygame.sprite.Sprite):
                     global Running
                     print('[ INFO ] Exiting...')
                     Running = False
+                    self.save_history() # Since otherwise it wouldn't be auto-saved
                     pygame.quit()
                     sys.exit()
                     exit()
@@ -369,6 +394,51 @@ class Terminal(pygame.sprite.Sprite):
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                     except RuntimeError:
+                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
+                elif command == "hostname":
+                    try:
+                        return_text += s.gethostname()
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
+                    except RuntimeError:
+                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
+                elif command == "time":
+                    try:
+                        now = datetime.datetime.now()
+                        current_time = now.strftime("%H:%M:%S") # uses a combination of real time and random for the nanoseconds
+                        formated_time = current_time + '.' + str(random.randrange(0,59)) # real nanoseconds would likely be offset anyways
+                        return_text += f"The current time is: {formated_time}\n"
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
+                elif command == "date":
+                    try:
+                        now = datetime.datetime.now()
+                        current_date = now.strftime("%a %m/%d/%y")
+                        return_text += f"The current date is: {current_date}\n"
+                    except PermissionError:
+                        return_text += "Error: ICMP Permission denied.\n"
+                elif command == "nslookup":
+                    def pad(tmp):
+                        max_length = 15
+                        tmp += " " * (max_length - len(tmp))
+                        return tmp
+                    try:
+                        host = command_params[0]
+                        ipv4 = s.gethostbyname(host)
+                        ipv6_data = s.getaddrinfo(host, "7") # echo port
+                        result = ""
+                        result += pad('Server:') + f"{ipv4}\n"
+                        result += pad('Address:') + f"{ipv4}#7\n"
+                        result += f"\n"
+                        result += f"Non-authoritative answer:\n"
+                        result += pad('Name:') + f"{host.lower()}\n"
+                        result += pad('Address:') + f"{ipv4}\n"
+                        result += pad('Name:') + f"{host.lower()}\n"
+                        result += pad('Address:') + f"{str(ipv6_data[0][4][0])}\n"
+                        return_text += result
+                    except IndexError:
+                        return_text += "Error: No url specified\n"
+                    except s.gaierror:
                         return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
                 elif command == "update":
                     r = requests.get(
@@ -428,6 +498,7 @@ class Terminal(pygame.sprite.Sprite):
                     
         if sandbox == True:
             return return_text
+        self.save_history() # Runs after any commands are ran
 
     def clear(self):
         self.current_display = ""
