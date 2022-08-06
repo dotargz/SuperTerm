@@ -418,19 +418,23 @@ class Terminal(pygame.sprite.Sprite):
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                 elif command == "nslookup":
+                    def pad(tmp):
+                        max_length = 15
+                        tmp += " " * (max_length - len(tmp))
+                        return tmp
                     try:
                         host = command_params[0]
                         ipv4 = s.gethostbyname(host)
                         ipv6_data = s.getaddrinfo(host, "7") # echo port
                         result = ""
-                        result += f"Server:                {ipv4}\n"
-                        result += f"Address:                {ipv4}#7\n"
+                        result += pad('Server:') + f"{ipv4}\n"
+                        result += pad('Address:') + f"{ipv4}#7\n"
                         result += f"\n"
                         result += f"Non-authoritative answer:\n"
-                        result += f"Name:                {host.lower()}\n"
-                        result += f"Address:                {ipv4}\n"
-                        result += f"Name:                {host.lower()}\n"
-                        result += f"Address:                {str(ipv6_data[0][4][0])}\n"
+                        result += pad('Name:') + f"{host.lower()}\n"
+                        result += pad('Address:') + f"{ipv4}\n"
+                        result += pad('Name:') + f"{host.lower()}\n"
+                        result += pad('Address:') + f"{str(ipv6_data[0][4][0])}\n"
                         return_text += result
                     except IndexError:
                         return_text += "Error: No url specified\n"
