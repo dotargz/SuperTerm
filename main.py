@@ -94,7 +94,7 @@ class System(pygame.sprite.Sprite):
         self.WHITE = (255, 255, 255)
         self.stoutsound = pygame.mixer.Sound(
             resource_path("assets/audio/stdout.wav"))
-        self.VERSION = "1.0.0β"
+        self.VERSION = "0.5.0β"
         self.NAME = "SuperBIOS βeta"
         self.ticks = 0
         self.FONT_SIZE = 14
@@ -171,8 +171,8 @@ class Terminal(pygame.sprite.Sprite):
         self.BLACK = (0, 0, 0)
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
-        self.VERSION = "0.5.1α"
-        self.NAME = "SuperTerm αlpha"
+        self.VERSION = "1.0.1β"
+        self.NAME = "SuperTerm βeta"
         pygame.display.set_caption(f"{self.NAME} {self.VERSION}")
         self.FONT_SIZE = 14
         self.load_font()
