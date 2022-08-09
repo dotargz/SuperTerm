@@ -1,3 +1,4 @@
 build/
 dist/
 super_env/
+data/history.json
