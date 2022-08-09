@@ -171,7 +171,7 @@ class Terminal(pygame.sprite.Sprite):
         self.BLACK = (0, 0, 0)
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
-        self.VERSION = "1.0.1β"
+        self.VERSION = "1.0.2β"
         self.NAME = "SuperTerm βeta"
         pygame.display.set_caption(f"{self.NAME} {self.VERSION}")
         self.FONT_SIZE = 14
@@ -397,7 +397,7 @@ class Terminal(pygame.sprite.Sprite):
                         return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
                 elif command == "hostname":
                     try:
-                        return_text += s.gethostname()
+                        return_text += s.gethostname() + "\n"
                     except PermissionError:
                         return_text += "Error: ICMP Permission denied.\n"
                     except RuntimeError:
