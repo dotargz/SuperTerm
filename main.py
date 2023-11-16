@@ -17,6 +17,7 @@ try:
     import socket as s
     import datetime
     import random
+    import importlib
 except:
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
     os.system("pip install pygame requests pyperclip pythonping")
@@ -55,17 +56,17 @@ def load_logo():
         try:
             os.remove("SUPERTERMlogo.png")
         except:
-            print("Failed to remove SUPERTERMlogo.png")
+            BIOS.dprint("Failed to remove SUPERTERMlogo.png")
         try:
-            print("Downloading logo...")
+            BIOS.dprint("Downloading logo...")
             rl = requests.get(
                 "https://res.cloudinary.com/onespark/image/upload/v1657217805/SuperTerm/img/logo_hpnmvz.png", allow_redirects=True)
             open('SUPERTERMlogo.png', 'wb').write(rl.content)
             logo = pygame.image.load(resource_path("SUPERTERMlogo.png"))
             pygame.display.set_icon(logo)
-            print("logo downloaded successfully")
+            BIOS.dprint("logo downloaded successfully")
         except:
-            print("Failed to download logo")
+            BIOS.dprint("Failed to download logo")
         STANDALONE = True
 
 
@@ -76,15 +77,19 @@ FramePerSec = pygame.time.Clock()
 FONT_SIZE = 14
 Running = True
 if STANDALONE:
-    print("[WARNING] Running in Standalone Mode")
-    print("Please run this program from the executable for the best results")
+    BIOS.dprint("[WARNING] Running in Standalone Mode")
+    BIOS.dprint("Please run this program from the executable for the best results")
 
+
+class OSNotSupported(Exception):
+    "Raised when the OS is not supported"
+    pass
 
 class System(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         global STANDALONE
-        global NOTWINDOWS
+        global WINDOWS
         global bootlist
         self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
@@ -103,11 +108,15 @@ class System(pygame.sprite.Sprite):
         self.warning = ""
         self.bootlist = ['[  OK  ] Started Show SuperTerm Boot Screen.', '[  OK  ] Started Forward Password R…s to SuperTerm Directory Watch.', '[  OK  ] Reached target Path Units.', '[  OK  ] Reached target Basic System.', '[  OK  ] Found device PLEXTOR_PX-128M3 SYSTEM.', '[  OK  ] Reached target Initrd Root Device.', '[  OK  ] Finished dracut initqueue hook.', '[  OK  ] Reached target Preparation for Remote File Systems.', '[  OK  ] Reached target Remote File Systems.', 'Starting File System Check…089e-4317-9ad5-2678ecf77029...', '[  OK  ] Finished File System Check…7-089e-4317-9ad5-2678ecf77029.', 'Mounting /sysroot...', '[  OK  ] Mounted /sysroot.', '[  OK  ] Reached target Initrd Root File System.', 'Starting Reload Configuration from the Real Root...', '[  OK  ] Finished Reload Configuration from the Real Root.', '[  OK  ] Reached target Initrd File Systems.', '[  OK  ] Reached target Initrd Default Target.', 'Starting Cleaning Up and Shutting Down Daemons...', '[  OK  ] Stopped target Initrd Default Target.', '[  OK  ] Stopped target Basic System.', '[  OK  ] Stopped target Initrd Root Device.', '[  OK  ] Stopped target Initrd /usr File System.', '[  OK  ] Stopped target Path Units.', '[  OK  ] Stopped target Remote File Systems.', '[  OK  ] Stopped target Preparation for Remote File Systems.', '[  OK  ] Stopped target Slice Units.', '[  OK  ] Stopped target Socket Units.', '[  OK  ] Stopped target System Initialization.', '[  OK  ] Stopped target Swaps.', '[  OK  ] Stopped target Timer Units.', '[  OK  ] Stopped dracut initqueue hook.', 'Starting Tell haveged about new root...', 'Starting SuperTerm switch root service...', '[  OK  ] Stopped Apply Kernel Variables.', '[  OK  ] Stopped Load Kernel Modules.', '[  OK  ] Stopped Create Volatile Files and Directories.', '[  OK  ] Stopped target Local File Systems.', '[  OK  ] Stopped Coldplug All udev Devices.', 'Stopping Rule-based Manage…for Device Events and Files...', '[  OK  ] Finished Cleaning Up and Shutting Down Daemons.', '[  OK  ] Stopped Rule-based Manager for Device Events and Files.', '[  OK  ] Closed udev Control Socket.', '[  OK  ] Closed udev Kernel Socket.', '[  OK  ] Stopped dracut pre-udev hook.', '[  OK  ] Stopped dracut cmdline hook.', '[  OK  ] Stopped dracut ask for additional cmdline parameters.', 'Starting Cleanup udev Database...', '[  OK  ] Stopped Create Static Device Nodes in /dev.', '[  OK  ] Stopped Create List of Static Device Nodes.', '[  OK  ] Finished Cleanup udev Database.', '[  OK  ] Finished Tell haveged about new root.', '[  OK  ] Reached target Switch Root.', '[  OK  ] Finished SuperTerm switch root service.', 'Starting Switch Root...', '[  OK  ] Stopped Switch Root.', '[  OK  ] Created slice Virtual Machine and Container Slice.', '[  OK  ] Created slice Slice /system/getty.', '[  OK  ] Created slice Slice /system/modprobe.', '[  OK  ] Created slice Slice /system/systemd-fsck.', '[  OK  ] Created slice User and Session Slice.', '[  OK  ] Set up automount Arbitrary…s File System Automount Point.', '[  OK  ] Stopped target Switch Root.', '[  OK  ] Stopped target Initrd File Systems.', '[  OK  ] Stopped target Initrd Root File System.', '[  OK  ] Reached target Slice Units.', '[  OK  ] Reached target System Time Set.', '[  OK  ] Reached target Local Verity Protected Volumes.', '[  OK  ] Listening on Device-mapper event daemon FIFOs.', '[  OK  ] Listening on LVM2 poll daemon socket.', '[  OK  ] Listening on Process Core Dump Socket.', '[  OK  ] Listening on initctl Compatibility Named Pipe.', '[  OK  ] Listening on udev Control Socket.', '[  OK  ] Listening on udev Kernel Socket.', 'Activating swap /dev/disk/…9816-459c-8d43-6f2656c7fa0a...', 'Mounting Huge Pages File System...', 'Mounting POSIX Message Queue File System...', 'Mounting Kernel Debug File System...', 'Mounting Kernel Trace File System...', 'Starting Load AppArmor profiles...', 'Starting Create List of Static Device Nodes...', 'Starting Monitoring of LVM…meventd or progress polling...', 'Starting Load Kernel Module configfs...', 'Starting Load Kernel Module drm...', 'Starting Load Kernel Module fuse...', '[  OK  ] Stopped Show SuperTerm Boot Screen.', '[  OK  ] Reached target Local Encrypted Volumes.', '[  OK  ] Stopped SuperTerm switch root service.', '[  OK  ] Stopped Journal Service.', '[  OK  ] Listening on Syslog Socket.', '[  OK  ] Stopped Entropy Daemon based on the HAVEGE algorithm.', 'Starting Journal Service...', 'Starting Load Kernel Modules...', 'Starting Remount Root and Kernel File Systems...', 'Starting Coldplug All udev Devices...', '[  OK  ] Activated swap /dev/disk/b…9-9816-459c-8d43-6f2656c7fa0a.', '[  OK  ] Mounted Huge Pages File System.', '[  OK  ] Mounted POSIX Message Queue File System.', '[  OK  ] Mounted Kernel Debug File System.', '[  OK  ] Mounted Kernel Trace File System.', '[  OK  ] Finished Create List of Static Device Nodes.', '[  OK  ] Finished Load Kernel Module configfs.', '[  OK  ] Finished Load Kernel Module drm.', '[  OK  ] Finished Load Kernel Module fuse.', '[  OK  ] Reached target Swaps.', 'Mounting FUSE Control File System...', 'Mounting Kernel Configuration File System...', 'Mounting Temporary Directory /tmp...', '[  OK  ] Mounted FUSE Control File System.', '[  OK  ] Mounted Kernel Configuration File System.', '[  OK  ] Mounted Temporary Directory /tmp.', '[  OK  ] Finished Monitoring of LVM… dmeventd or progress polling.', '[  OK  ] Finished Load Kernel Modules.', 'Starting Apply Kernel Variables for 5.15.8-1-default...', '[  OK  ] Started Journal Service.', '[  OK  ] Finished Remount Root and Kernel File Systems.', 'Starting Flush Journal to Persistent Storage...', 'Starting Load/Save Random Seed...', 'Starting Create Static Device Nodes in /dev...', '[  OK  ] Finished Flush Journal to Persistent Storage.', '[  OK  ] Finished Apply Kernel Variables for 5.15.8-1-default.', 'Starting Apply Kernel Variables...', '[  OK  ] Finished Load AppArmor profiles.', '[  OK  ] Finished Load/Save Random Seed.', '[  OK  ] Finished Create Static Device Nodes in /dev.', '[  OK  ] Reached target Preparation for Local File Systems.',
                          'Starting File System Check…6895-4a09-9aac-4412f3e46349...', 'Starting File System Check…9ec4-460e-ae25-83870db3baad...', 'Starting File System Check…850d-45e0-a3ef-38a5a69268c7...', 'Starting Rule-based Manage…for Device Events and Files...', '[  OK  ] Finished Apply Kernel Variables.', '[  OK  ] Finished Coldplug All udev Devices.', '[  OK  ] Finished File System Check…3-850d-45e0-a3ef-38a5a69268c7.', 'Mounting /home...', '[  OK  ] Mounted /home.', '[  OK  ] Started Rule-based Manager for Device Events and Files.', '[  OK  ] Finished File System Check…4-9ec4-460e-ae25-83870db3baad.', 'Mounting /mnt/PX256...', '[  OK  ] Mounted /mnt/PX256.', '[  OK  ] Finished File System Check…f-6895-4a09-9aac-4412f3e46349.', 'Mounting /mnt/DATA...', '[  OK  ] Mounted /mnt/DATA.', '[  OK  ] Reached target Local File Systems.', 'Starting Restore /run/initramfs on shutdown...', 'Starting Early Kernel Boot Messages...', 'Starting Tell SuperTerm To Write Out Runtime Data...', 'Starting Create Volatile Files and Directories...', '[  OK  ] Finished Restore /run/initramfs on shutdown.', '[  OK  ] Finished Tell SuperTerm To Write Out Runtime Data.', '[  OK  ] Finished Create Volatile Files and Directories.', 'Starting Security Auditing Service...', '[  OK  ] Started Entropy Daemon based on the HAVEGE algorithm.', '[  OK  ] Started Security Auditing Service.', 'Starting Record System Boot/Shutdown in UTMP...', '[  OK  ] Finished Record System Boot/Shutdown in UTMP.', '[  OK  ] Reached target System Initialization.', '[  OK  ] Started Watch /etc/sysconfig/btrfsmaintenance.', '[  OK  ] Started Watch for changes in CA certificates.', '[  OK  ] Started CUPS Scheduler.', '[  OK  ] Started Daily Cleanup of Snapper Snapshots.', '[  OK  ] Started Daily Cleanup of Temporary Directories.', '[  OK  ] Reached target Path Units.', '[  OK  ] Listening on Avahi mDNS/DNS-SD Stack Activation Socket.', '[  OK  ] Listening on CUPS Scheduler.', '[  OK  ] Listening on D-Bus System Message Bus Socket.', '[  OK  ] Listening on Open-iSCSI iscsid Socket.', '[  OK  ] Listening on Libvirt local socket.', '[  OK  ] Listening on Libvirt admin socket.', '[  OK  ] Listening on Libvirt local read-only socket.', '[  OK  ] Listening on PC/SC Smart Card Daemon Activation Socket.', '[  OK  ] Listening on Virtual machine lock manager socket.', '[  OK  ] Listening on Virtual machine log manager socket.', '[  OK  ] Reached target Socket Units.', '[  OK  ] Reached target Basic System.', 'Starting auditd rules generation...', 'Starting Avahi mDNS/DNS-SD Stack...', '[  OK  ] Started D-Bus System Message Bus.', '[  OK  ] Started irqbalance daemon.', 'Starting Generate issue file for login session...', 'Starting Apply settings from /etc/sysconfig/keyboard...', 'Starting Machine Check Exception Logging Daemon...', 'Starting Name Service Cache Daemon...', 'Starting Authorization Manager...', 'Starting System Logging Service...', 'Starting Self Monitoring a…g Technology (SMART) Daemon...', 'Starting Virtual Machine a…tainer Registration Service...', '[  OK  ] Finished Early Kernel Boot Messages.', '[  OK  ] Started Name Service Cache Daemon.', '[  OK  ] Reached target Host and Network Name Lookups.', '[  OK  ] Reached target User and Group Name Lookups.', 'Starting User Login Management...', '[  OK  ] Started Machine Check Exception Logging Daemon.', 'Starting Save/Restore Sound Card State...', '[  OK  ] Finished Generate issue file for login session.', '[  OK  ] Finished Save/Restore Sound Card State.', 'Starting Load extra kernel modules for sound stuff...', '[  OK  ] Finished Load extra kernel modules for sound stuff.', '[  OK  ] Reached target Sound Card.', '[  OK  ] Finished auditd rules generation.', '[  OK  ] Started System Logging Service.', '[  OK  ] Finished Apply settings from /etc/sysconfig/keyboard.', '[  OK  ] Started Virtual Machine an…ontainer Registration Service.', '[  OK  ] Started User Login Management.', '[  OK  ] Started Avahi mDNS/DNS-SD Stack.', '[  OK  ] Started Authorization Manager.', 'Starting Modem Manager...', 'Starting firewalld - dynamic firewall daemon...', '[  OK  ] Started Modem Manager.', '[  OK  ] Started Self Monitoring an…ing Technology (SMART) Daemon.', '[  OK  ] Started firewalld - dynamic firewall daemon.', '[  OK  ] Reached target Preparation for Network.', 'Starting Network Manager...', '[  OK  ] Started Network Manager.', '[  OK  ] Reached target Network.', '[  OK  ] Reached target Network is Online.', 'Starting NTP client/server...', 'Starting CUPS Scheduler...', 'Starting Login and scanning of iSCSI devices...', 'Starting Samba SMB Daemon...', 'Starting Hostname Service...', '[  OK  ] Finished Login and scanning of iSCSI devices.', '[  OK  ] Reached target Remote File Systems.', 'Starting Virtualization daemon...', 'Starting Permit User Sessions...', '[  OK  ] Started CUPS Scheduler.', '[  OK  ] Finished Permit User Sessions.', 'Starting Hold until boot process finishes up...', '[  OK  ] Started NTP client/server.', '[  OK  ] Reached target System Time Synchronized.', '[  OK  ] Started Backup of RPM database.', '[  OK  ] Started Backup of /etc/sysconfig.', '[  OK  ] Started Balance block groups on a btrfs filesystem.', '[  OK  ] Started Scrub btrfs filesystem, verify block checksums.', '[  OK  ] Started Check if mainboard battery is Ok.', '[  OK  ] Started Discard unused blocks once a week.', '[  OK  ] Started Daily rotation of log files.', '[  OK  ] Started Daily man-db regeneration.', '[  OK  ] Started Timeline of Snapper Snapshots.', '[  OK  ] Started daily update of the root trust anchor for DNSSEC.', '[  OK  ] Reached target Timer Units.', '[  OK  ] Started Command Scheduler.', 'Starting X Display Manager...', '[  OK  ] Started Hostname Service.', '[  OK  ] Listening on Load/Save RF …itch Status /dev/rfkill Watch.', 'Starting Network Manager Script Dispatcher Service...', '[  OK  ] Started Network Manager Script Dispatcher Service.', 'Starting Locale Service...', '[  OK  ] Started Virtualization daemon.', '[  OK  ] Started Samba SMB Daemon.', '[  OK  ] Started Locale Service.']
-        self.maxticks = len(self.bootlist)
+        # set the max ticks to the length of the bootlist unless env is set to false
+        if self.get_env("boot_anim", "true").lower() == "false":
+            self.maxticks = 0
+        else:
+            self.maxticks = len(self.bootlist)
 
         if platform.system() != "Windows":
-            print("[WARNING] Running on a non-Windows OS")
-            print("Please run this program from the executable for the best results")
+            self.dprint("[WARNING] Running on a non-Windows OS")
+            self.dprint("Please run this program from the executable for the best results")
             global WINDOWS
             WINDOWS = False
         else:
@@ -159,19 +168,50 @@ class System(pygame.sprite.Sprite):
             x = pos[0]  # Reset the x.
             y += word_height  # Start on new row.
 
+    def set_env(self, key, value, deleteIfNone=False):
+        try:
+            with open(resource_path("assets/data/environment.json"), "r") as f:
+                env = json.load(f)
+        except:
+            env = {}
+        if value == None and deleteIfNone == True:
+            try:
+                del env[key]
+            except KeyError:
+                pass
+        else:
+            env[key] = value
+        with open(resource_path("assets/data/environment.json"), "w") as f:
+            json.dump(env, f)
+
+    def get_env(self, key, default=None):
+        try:
+            with open(resource_path("assets/data/environment.json"), "r") as f:
+                env = json.load(f)
+        except:
+            env = {}
+        try:
+            return env[key]
+        except KeyError:
+            return default
+
+    def dprint(*arg):
+        if BIOS.get_env("debug", "false").lower() == "true":
+            print(*arg)
+
 
 class Terminal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         global STANDALONE
-        global NOTWINDOWS
+        global WINDOWS
         self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
         self.GREEN = (0, 255, 0)
         self.BLACK = (0, 0, 0)
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
-        self.VERSION = "1.0.2β"
+        self.VERSION = "2.0.0β"
         self.NAME = "SuperTerm βeta"
         pygame.display.set_caption(f"{self.NAME} {self.VERSION}")
         self.FONT_SIZE = 14
@@ -182,7 +222,7 @@ class Terminal(pygame.sprite.Sprite):
         self.user_y_offset = self.y_offset
         self.history = []
         self.history_count = 0
-        self.history_persistent = True
+        self.history_persistent = BIOS.get_env("history_persistent", "false").lower() == "true"
         self.load_history()
         self.current_input = ""
         self.stoutsound = pygame.mixer.Sound(
@@ -198,6 +238,29 @@ class Terminal(pygame.sprite.Sprite):
         if STANDALONE == True:
             self.warning += '\n[ WARN ] Standalone mode enabled.\n[ STANDALONE ] Downloading assets...\n\nWARNING: YOU ARE RUNNING SUPERTERM AS A STANDALONE PYTHON FILE,\nTHE TERMINAL WILL REQUIRE A INTERNET CONNECTION TO WORK AS EXPECTED.\nTO RELOAD THE TERMINAL AND ITS ASSETS, RUN THE COMMAND "RELOAD".'
         self.current_display = f"{self.NAME} [Version {self.VERSION}]\n(c) 2022 OneSpark LLC. All rights reserved.{self.warning}\n\n"
+        self.load_programs()
+        self.system_commands = {
+            "exit": self.exit,
+            "clear": self.clear,
+            "reload": self.reload,
+        }
+
+        #alias for programs so they are somewhat sandboxed (not really)
+        class AliasWrapper:
+            def __init__(self):
+                self.aliaslist = {
+                    "get_env": BIOS.get_env,
+                    "set_env": BIOS.set_env,
+                    "dprint": BIOS.dprint,
+                    "resource_path": resource_path,
+                    "OSNotSupported": OSNotSupported,
+                }
+            def __getattr__(self, name):
+                if name in self.aliaslist:
+                    return self.aliaslist[name]
+                else:
+                    return NameError(f"name '{name}' is not defined")
+        self.alias = AliasWrapper()
 
     def load_font(self, isReloading=False):
         global FONT
@@ -211,32 +274,38 @@ class Terminal(pygame.sprite.Sprite):
                 if isReloading == False:
                     os.remove("FiraCode-Regular.ttf")
             except:
-                print("Failed to remove FiraCode-Regular.ttf")
+                BIOS.dprint("Failed to remove FiraCode-Regular.ttf")
             try:
-                print("Downloading FiraCode-Regular.ttf...")
+                BIOS.dprint("Downloading FiraCode-Regular.ttf...")
                 rf = requests.get(
                     "https://res.cloudinary.com/onespark/raw/upload/v1657217832/SuperTerm/fonts/FiraCode-Regular_flmsme.ttf", allow_redirects=True)
                 try:
                     open('FiraCode-Regular.ttf', 'wb').write(rf.content)
-                    print("FiraCode-Regular.ttf downloaded successfully")
+                    BIOS.dprint("FiraCode-Regular.ttf downloaded successfully")
                 except:
-                    print(
+                    BIOS.dprint(
                         "Failed to write FiraCode-Regular.ttf (probably because of a permissions error)")
                 try:
                     FONT = pygame.font.Font(resource_path(
                         "FiraCode-Regular.ttf"), self.FONT_SIZE)
                 except:
-                    print("Failed to load FiraCode-Regular.ttf")
+                    BIOS.dprint("Failed to load FiraCode-Regular.ttf")
             except:
                 FONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
-                print("Failed to download FiraCode-Regular.ttf ")
+                BIOS.dprint("Failed to download FiraCode-Regular.ttf ")
             STANDALONE = True
 
     def load_history(self):
         # Loads all saved history
         if not self.history_persistent:
             return
-        persistent_history = resource_path("assets/data/history.json")
+        persistent_history = resource_path("assets\\data\\history.json")
+
+        # create the file if it doesn't exist
+        if not os.path.exists(persistent_history):
+            with open(persistent_history, 'w') as f:
+                json.dump([], f)
+
         with open(persistent_history, 'r') as f:
             self.history = json.load(f)
 
@@ -249,7 +318,7 @@ class Terminal(pygame.sprite.Sprite):
             try:
                 json.dump(self.history, f)
             except:
-                print("Error: Writing to terminal history")
+                BIOS.dprint("Error: Writing to terminal history failed.")
 
     def update(self, checkY=False):
         if self.hasplayedstartup == False:
@@ -319,15 +388,10 @@ class Terminal(pygame.sprite.Sprite):
         if tokenized == [['', [], []]]:
             return
         for cmd in tokenized:
-            print("Full command: " + str(tokenized))
-            print("CURRENT COMMAND: " + str(cmd))
-            print("Commnd length: " + str(len(tokenized)))
-            # list of valid commands
-            vaild_commands = ["echo", "clear", "exit",
-                              "help", "run", "version", "debug", "license", "reload", "tkz", "ping", "update", "st", "nslookup", "hostname", "time", "date"]
-            command_alias = ["cls"]
+            BIOS.dprint("Full command: " + str(tokenized))
+            BIOS.dprint("CURRENT COMMAND: " + str(cmd))
+            BIOS.dprint("Commnd length: " + str(len(tokenized)))
             # format the commands in various ways
-            list_commands = ", ".join(vaild_commands)
             return_text = ""
             full_command = command
             tkcommand = cmd[0]
@@ -339,145 +403,22 @@ class Terminal(pygame.sprite.Sprite):
             while "" in command_params:
                 command_params.remove("")
             # print for debugging
-            print("Command: " + command)
-            print("Full Command: " + full_command)
-            print("Params: " + str(command_params))
-            print("Flags: " + str(command_flags))
+            BIOS.dprint("Command: " + command)
+            BIOS.dprint("Full Command: " + full_command)
+            BIOS.dprint("Params: " + str(command_params))
+            BIOS.dprint("Flags: " + str(command_flags))
             # check if the command is valid
-            if command in vaild_commands or command in command_alias:
-                if command == "clear" or command == "cls":
-                    self.clear()
-                elif command == "echo":
-                    return_text = " ".join(command_params) + "\n"
-                elif command == "exit":
-                    global Running
-                    print('[ INFO ] Exiting...')
-                    Running = False
-                    self.save_history() # Since otherwise it wouldn't be auto-saved
-                    pygame.quit()
-                    sys.exit()
-                    exit()
-                elif command == "help":
-                    return_text = f"Commands: {list_commands}\n"
-                elif command == "run" and WINDOWS == True:
-                    if "".join(command_params).replace(" ", "") == "":
-                        return_text = "Error: No file specified.\n"
-                    else:
-                        cmdToRun = "start " + " ".join(command_params)
-                        cmd = " ".join(command_params)
-                        print("Running: " + cmd)
-                        os.system(cmdToRun)
-                        if "-s" not in command_flags:
-                            return_text = f"Running {cmd}...\n"
-                        else:
-                            return_text = ""
-                elif command == "version":
-                    return_text = f"{TERMINAL.NAME} v{TERMINAL.VERSION}\n"
-                elif command == "license":
-                    return_text = f"Copyright 2022 OneSpark LLC.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-                elif command == "debug":
-                    debug_string = {"History": str(
-                        self.history), "History count": str(self.history_count)}
-                    print(debug_string)
-                    return_text = f"{debug_string}\n"
-                elif command == "reload":
-                    self.reload()
-                    sandbox = True
-                elif command == "tkz":
-                    return_text = f"{str(self.advanced_tokenize(full_command))}\n"
-                elif command == "ping":
-                    try:
-                        ping_list = pythonping.ping(
-                            command_params[0], verbose=True, size=2)
-                        for response in ping_list:
-                            return_text += f"{response}\n"
-                    except PermissionError:
-                        return_text += "Error: ICMP Permission denied.\n"
-                    except RuntimeError:
-                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
-                elif command == "hostname":
-                    try:
-                        return_text += s.gethostname() + "\n"
-                    except PermissionError:
-                        return_text += "Error: ICMP Permission denied.\n"
-                    except RuntimeError:
-                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
-                elif command == "time":
-                    try:
-                        now = datetime.datetime.now()
-                        current_time = now.strftime("%H:%M:%S") # uses a combination of real time and random for the nanoseconds
-                        formated_time = current_time + '.' + str(random.randrange(0,59)) # real nanoseconds would likely be offset anyways
-                        return_text += f"The current time is: {formated_time}\n"
-                    except PermissionError:
-                        return_text += "Error: ICMP Permission denied.\n"
-                elif command == "date":
-                    try:
-                        now = datetime.datetime.now()
-                        current_date = now.strftime("%a %m/%d/%y")
-                        return_text += f"The current date is: {current_date}\n"
-                    except PermissionError:
-                        return_text += "Error: ICMP Permission denied.\n"
-                elif command == "nslookup":
-                    def pad(tmp):
-                        max_length = 15
-                        tmp += " " * (max_length - len(tmp))
-                        return tmp
-                    try:
-                        host = command_params[0]
-                        ipv4 = s.gethostbyname(host)
-                        ipv6_data = s.getaddrinfo(host, "7") # echo port
-                        result = ""
-                        result += pad('Server:') + f"{ipv4}\n"
-                        result += pad('Address:') + f"{ipv4}#7\n"
-                        result += f"\n"
-                        result += f"Non-authoritative answer:\n"
-                        result += pad('Name:') + f"{host.lower()}\n"
-                        result += pad('Address:') + f"{ipv4}\n"
-                        result += pad('Name:') + f"{host.lower()}\n"
-                        result += pad('Address:') + f"{str(ipv6_data[0][4][0])}\n"
-                        return_text += result
-                    except IndexError:
-                        return_text += "Error: No url specified\n"
-                    except s.gaierror:
-                        return_text += f"Error: Could not find hostname '{command_params[0]}'.\n"
-                elif command == "update":
-                    r = requests.get(
-                        "https://server.hyprlink.xyz/updatecheck?client=terminal&version=" + TERMINAL.VERSION.replace("α", ""))
-                    # convert from json to dict
-                    res = json.loads(r.text)
-                    try:
-                        return_text = f"Version Status:\n"
-                        #return_text += f"Server Status: {res['server']['status']}\n"
-                        return_text += f"- Latest Version: {res['update']['latest_version']}α\n"
-                        return_text += f"- Current Version: {TERMINAL.VERSION}\n"
-                        return_text += f"Update Status:\n"
-                        if res['update']['needs_update'] == "true":
-                            if res['update']['version_diff'].split(".")[0] != "0":
-                                return_text += f"- Major update available: {res['update']['latest_version']}α\n"
-                            elif res['update']['version_diff'].split(".")[1] != "0":
-                                return_text += f"- Minor update available: {res['update']['latest_version']}α\n"
-                            elif res['update']['version_diff'].split(".")[2] != "0":
-                                return_text += f"- Patch update available: {res['update']['latest_version']}α\n"
-                            return_text += f"Download the latest version from https://github.com/dotargz/superterm/releases\n"
-                        else:
-                            return_text += f"- No updates available.\n"
-                    except Exception as e:
-                        return_text = "Error: Could not check for updates.\n"
-                elif command == "st" and WINDOWS == True:
-                    os.system(f"start {os.path.basename(__file__)}")
-                    if "-s" not in command_flags:
-                        return_text = f"Running SuperTerm...\n"
-                    else:
-                        return_text = ""
-
-                else:
-                    return_text = "Error: Command handler not found.\n"
-                    if WINDOWS == False:
-                        return_text += "Notice: Some commands may not work on Linux or MacOS.\n"
+            if command in self.programs:
+                # run the command
+                return_text = self.run_program(command, command_params, command_flags) + "\n"
+            elif command in self.system_commands:
+                # run the command
+                return_text = self.system_commands[command]() if not None else "" + "\n"
+                sandbox = True
             else:
-                return_text = f"Error: Command '{normal_command}' not found.\n"
+                return_text = f"Error: Command '{command}' not found.\n"
             if sandbox == False:
-                if command != "clear" and command != "cls":
+                if command != "clear":
                     if len(tokenized) == 1:
                         self.current_display += f'~$ {full_command}\n' + \
                             return_text
@@ -488,17 +429,54 @@ class Terminal(pygame.sprite.Sprite):
                         if notFirst == False:
                             self.current_display += f'~$ {full_command}\n' + \
                                 return_text
-                            print("Adding to history: " + full_command)
+                            BIOS.dprint("Adding to history: " + full_command)
                             self.history.append(full_command)
                             self.history_count = 0
                             notFirst = True
                             pygame.mixer.Sound.play(TERMINAL.stoutsound)
                         else:
                             self.current_display += return_text
-                    
+
         if sandbox == True:
             return return_text
         self.save_history() # Runs after any commands are ran
+
+    def load_programs(self):
+        # import all py scripts in the /programs folder and add them to the list of valid programs
+        self.programs = []
+        for file in os.listdir(resource_path("programs")):
+            if file.endswith(".py"):
+                self.programs.append(file.replace(".py", ""))
+                BIOS.dprint("Loaded program: " + file.replace(".py", ""))
+
+    def run_program(self, program, params, flags):
+        # run a program from the /programs folder
+        try:
+            program_module = importlib.import_module(
+                "programs." + program)
+            return_text = program_module.run(self, params, flags)
+            return return_text
+        except ModuleNotFoundError:
+            return_text = f"Error: Program '{program}' not found.\n"
+            return return_text
+        except OSNotSupported:
+            return_text = f"Error: Program '{program}' not supported on this OS.\n"
+            return_text += f"Error: {e}\n"
+            return return_text
+
+    def get_program_metadata(self, program):
+        # get the metadata for a program
+        try:
+            program_module = importlib.import_module(
+                "programs." + program)
+            try:
+                tmp = program_module.metadata
+                return tmp
+            except AttributeError:
+                return None
+        except ModuleNotFoundError:
+            return None
+
 
     def clear(self):
         self.current_display = ""
@@ -506,6 +484,15 @@ class Terminal(pygame.sprite.Sprite):
                        (5, 5), FONT, TERMINAL.WHITE)
         self.y_offset = 5
         self.user_y_offset = 5
+
+    def exit(self):
+        global Running
+        print('[ INFO ] Exiting...')
+        Running = False
+        self.save_history() # Since otherwise it wouldn't be auto-saved
+        pygame.quit()
+        sys.exit()
+        exit()
 
     def tokenize(self, command):
         tokens = command.split(" ")
@@ -523,6 +510,8 @@ class Terminal(pygame.sprite.Sprite):
             tokens = split_commands[cmd].split(" ")
             justcommand.append(tokens[0])
 
+        BIOS.dprint("justcommand: " + str(justcommand))
+
         # Flag handling
         global justflag
         justflag = []
@@ -534,23 +523,25 @@ class Terminal(pygame.sprite.Sprite):
                     flagtmp.append(tokens[token])
             justflag.append(flagtmp)
 
+        BIOS.dprint("justflag: " + str(justflag))
+
         # Shlex processing to make life easier
         output = []
         for i in range(len(split_commands)):
             output.append(shlex.split(split_commands[i]))
 
+        BIOS.dprint("output: " + str(output))
+
         # Parameters processing
         output2 = []
-        global tmp
         for command in range(len(output)):
             tmp = [[]]
-            for token in range(len(output[command])):
-                if output[command].index(str(output[command][token])) != 0:
-                    if output[command][token].startswith("-") == False:
-                        tmp[0].append(output[command][token])
+            for token_index in range(len(output[command])):
+                if token_index != 0 and not output[command][token_index].startswith("-"):
+                    tmp[0].append(output[command][token_index])
             output2.append(tmp)
 
-        #print("Just params: " + str(output2))
+        BIOS.dprint("Just params: " + str(output2))
 
         # Add the command names and flags back
         for rcmd in range(len(justcommand)):
@@ -561,8 +552,9 @@ class Terminal(pygame.sprite.Sprite):
 
     def reload(self):
         self.__init__()
-        print("Reloaded.")
+        BIOS.dprint("Reloaded.")
         self.hasReloaded = True
+        return None
 
     def blit_text(self, surface, text, pos, font, color=pygame.Color(0, 0, 0), checkY=False):
         # 2D array where each row is a list of words.

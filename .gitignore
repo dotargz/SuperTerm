@@ -1,4 +1,5 @@
 build/
 dist/
 super_env/
-data/history.json
+assets/data/*
+*.pyc
