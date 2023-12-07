@@ -24,6 +24,7 @@ metadata = {
         "get": "Get an environment variable",
         "del": "Delete an environment variable",
         "list": "List all environment variables",
+        "listcache": "List the cached environment variables for debugging",
     },
     "examples": [
         {
@@ -88,6 +89,14 @@ def run(system, command_params, command_flags):
                     env = json.load(f)
                     for key in env:
                         return_text += f"{key}: {env[key]}\n"
+            except Exception as e:
+                return_text = "Error: Could not load environment variables.\n"
+                return_text += f"Error Message: {e}\n"
+        elif command_params[0] == "listcache":
+            try:
+                env = system.alias.env_cache
+                for key in env:
+                    return_text += f"{key}: {env[key]}\n"
             except Exception as e:
                 return_text = "Error: Could not load environment variables.\n"
                 return_text += f"Error Message: {e}\n"

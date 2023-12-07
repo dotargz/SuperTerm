@@ -7,6 +7,32 @@
 #   When creating new programs, you may simply return a string and it will be printed
 # ------------------------------------------------------------------------------------
 import datetime
+import random
+
+metadata = {
+    "name": "time",
+    "description": "Get the current time.",
+    "version": "1.0.0",
+    "author": "dotargz",
+    "dependencies": ['datetime', 'random'],
+    "superterm_version": ">=2.0.0",
+    "usage": "time",
+    "examples": [
+        {
+            "description": "Get the current time",
+            "command": "time",
+        },
+    ],
+    "license": "MIT",
+    "repository": "https://github.com/dotargz/SuperTerm/",
+    "Issues": "https://github.com/dotargz/SuperTerm/issues",
+    "maintainers": [
+        {
+            "name": "dotargz",
+            "email": "me@blueskye.dev",
+        },
+    ],
+}
 
 def run(system, command_params, command_flags):
     return_text = ""
