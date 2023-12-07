@@ -15,7 +15,6 @@ def run(system, command_params, command_flags):
         else:
             cmdToRun = "start " + " ".join(command_params)
             cmd = " ".join(command_params)
-            print("Running: " + cmd)
             os.system(cmdToRun)
             if "-s" not in command_flags:
                 return f"Running {cmd}...\n"
@@ -28,7 +27,6 @@ def run(system, command_params, command_flags):
             else:
                 cmdToRun = "xdg-open " + " ".join(command_params)
                 cmd = " ".join(command_params)
-                print("Running: " + cmd)
                 os.system(cmdToRun)
                 if "-s" not in command_flags:
                     return f"Running {cmd}...\n"

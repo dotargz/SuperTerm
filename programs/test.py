@@ -45,4 +45,7 @@ metadata = {
 
 def run(system, command_params, command_flags):
     return_text = "Boilerplate program."
+    return_text += f"\nCommand params: {command_params}"
+    return_text += f"\nCommand flags: {command_flags}"
+    return_text += "\nSystem alias: " + str(system.alias)
     return return_text
