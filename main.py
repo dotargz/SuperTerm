@@ -22,6 +22,8 @@ pygame.init()
 
 # for compiling the program
 def resource_path(relative_path):
+    if sys.platform == 'win32':
+        relative_path = relative_path.replace("/", "\\")
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -377,9 +379,9 @@ class Terminal(pygame.sprite.Sprite):
         self.save_history() # Runs after any commands are ran
 
     def load_programs(self):
-        # import all py scripts in the assets/programs folder and add them to the list of valid programs
+        # import all py scripts in the programs folder and add them to the list of valid programs
         self.programs = []
-        for file in os.listdir(resource_path("assets/programs")):
+        for file in os.listdir(resource_path("programs")):
             if file.endswith(".py"):
                 self.programs.append(file.replace(".py", ""))
                 BIOS.dprint("Loaded program: " + file.replace(".py", ""))
@@ -390,11 +392,11 @@ class Terminal(pygame.sprite.Sprite):
                     BIOS.dprint("Loaded external program: " + file.replace(".py", ""))
 
     def run_program(self, program, params, flags):
-        # run a program from the assets/programs folder
+        # run a program from the programs folder
         try:
             try:
                 program_module = importlib.import_module(
-                    "assets.programs." + program)
+                    "programs." + program)
             except ModuleNotFoundError:
                 program_module = importlib.import_module(
                     "assets.data.external_programs." + program)
@@ -413,7 +415,7 @@ class Terminal(pygame.sprite.Sprite):
         try:
             try:
                 program_module = importlib.import_module(
-                    "assets.programs." + program)
+                    "programs." + program)
             except ModuleNotFoundError:
                 program_module = importlib.import_module(
                     "assets.data.external_programs." + program)
