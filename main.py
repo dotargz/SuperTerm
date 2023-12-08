@@ -1,35 +1,26 @@
 # -*- coding: utf-8 -*-
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import sys
+import pygame
+import json
+import platform
+import requests
+import pyperclip as pc
+import re
+import time
+import random
+import shlex
+import pythonping
+import socket as s
+import datetime
+import random
+import importlib
 
-try:
-    import os
-    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-    import sys
-    import pygame
-    import json
-    import platform
-    import requests
-    import pyperclip as pc
-    import re
-    import time
-    import random
-    import shlex
-    import pythonping
-    import socket as s
-    import datetime
-    import random
-    import importlib
-except:
-    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-    os.system("pip install pygame requests pyperclip pythonping")
-    exit()
 # HAS TO BE DONE FIRST
-
-
 pygame.init()
 
 # for compiling the program
-
-
 def resource_path(relative_path):
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -44,42 +35,13 @@ def resource_path(relative_path):
 DISPLAYSURF = pygame.display.set_mode((952, 480), pygame.RESIZABLE)
 SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
 
+logo = pygame.image.load(resource_path("assets/img/logo.png"))
+pygame.display.set_icon(logo)
 
-def load_logo():
-    global logo
-    global STANDALONE
-    try:
-        logo = pygame.image.load(resource_path("assets/img/logo.png"))
-        pygame.display.set_icon(logo)
-        STANDALONE = False
-    except:
-        try:
-            os.remove("SUPERTERMlogo.png")
-        except:
-            BIOS.dprint("Failed to remove SUPERTERMlogo.png")
-        try:
-            BIOS.dprint("Downloading logo...")
-            rl = requests.get(
-                "https://res.cloudinary.com/onespark/image/upload/v1657217805/SuperTerm/img/logo_hpnmvz.png", allow_redirects=True)
-            open('SUPERTERMlogo.png', 'wb').write(rl.content)
-            logo = pygame.image.load(resource_path("SUPERTERMlogo.png"))
-            pygame.display.set_icon(logo)
-            BIOS.dprint("logo downloaded successfully")
-        except:
-            BIOS.dprint("Failed to download logo")
-        STANDALONE = True
-
-
-load_logo()
 FPS = 60
 WINDOWS = None
 FramePerSec = pygame.time.Clock()
-FONT_SIZE = 14
 Running = True
-if STANDALONE:
-    BIOS.dprint("[WARNING] Running in Standalone Mode")
-    BIOS.dprint("Please run this program from the executable for the best results")
-
 
 class OSNotSupported(Exception):
     "Raised when the OS is not supported"
@@ -88,7 +50,6 @@ class OSNotSupported(Exception):
 class System(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        global STANDALONE
         global WINDOWS
         global bootlist
         self.BLUE = (0, 0, 255)
@@ -98,7 +59,7 @@ class System(pygame.sprite.Sprite):
         self.NOTBLACK = (12, 12, 12)
         self.WHITE = (255, 255, 255)
         self.stoutsound = pygame.mixer.Sound(
-            resource_path("assets/audio/stdout.wav"))
+                resource_path("assets/audio/stdout.wav"))
         self.VERSION = "0.5.0β"
         self.NAME = "SuperBIOS βeta"
         self.ticks = 0
@@ -207,7 +168,6 @@ class System(pygame.sprite.Sprite):
 class Terminal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        global STANDALONE
         global WINDOWS
         self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
@@ -219,7 +179,8 @@ class Terminal(pygame.sprite.Sprite):
         self.NAME = "SuperTerm βeta"
         pygame.display.set_caption(f"{self.NAME} {self.VERSION}")
         self.FONT_SIZE = 14
-        self.load_font()
+        self.FONT = pygame.font.Font(resource_path(
+            'assets/fonts/FiraCode-Regular.ttf'), self.FONT_SIZE)
         self.cursor_blinking = False
         self.cursor_blink_time = 0
         self.y_offset = 5
@@ -239,8 +200,6 @@ class Terminal(pygame.sprite.Sprite):
         self.warning = ""
         if WINDOWS == False:
             self.warning += '\n[ WARN ] Non-Windows OS detected.\n[ NON-WINDOWS ] The terminal will not be able to run properly on non-Windows operating systems.'
-        if STANDALONE == True:
-            self.warning += '\n[ WARN ] Standalone mode enabled.\n[ STANDALONE ] Downloading assets...\n\nWARNING: YOU ARE RUNNING SUPERTERM AS A STANDALONE PYTHON FILE,\nTHE TERMINAL WILL REQUIRE A INTERNET CONNECTION TO WORK AS EXPECTED.\nTO RELOAD THE TERMINAL AND ITS ASSETS, RUN THE COMMAND "RELOAD".'
         self.current_display = f"{self.NAME} [Version {self.VERSION}]\n(c) 2022 OneSpark LLC. All rights reserved.{self.warning}\n\n"
         self.load_programs()
         self.system_commands = {
@@ -267,39 +226,6 @@ class Terminal(pygame.sprite.Sprite):
                 else:
                     return NameError(f"name '{name}' is not defined")
         self.alias = AliasWrapper()
-
-    def load_font(self, isReloading=False):
-        global FONT
-        global STANDALONE
-        try:
-            FONT = pygame.font.Font(resource_path(
-                'assets/fonts/FiraCode-Regular.ttf'), self.FONT_SIZE)
-            STANDALONE = False
-        except:
-            try:
-                if isReloading == False:
-                    os.remove("FiraCode-Regular.ttf")
-            except:
-                BIOS.dprint("Failed to remove FiraCode-Regular.ttf")
-            try:
-                BIOS.dprint("Downloading FiraCode-Regular.ttf...")
-                rf = requests.get(
-                    "https://res.cloudinary.com/onespark/raw/upload/v1657217832/SuperTerm/fonts/FiraCode-Regular_flmsme.ttf", allow_redirects=True)
-                try:
-                    open('FiraCode-Regular.ttf', 'wb').write(rf.content)
-                    BIOS.dprint("FiraCode-Regular.ttf downloaded successfully")
-                except:
-                    BIOS.dprint(
-                        "Failed to write FiraCode-Regular.ttf (probably because of a permissions error)")
-                try:
-                    FONT = pygame.font.Font(resource_path(
-                        "FiraCode-Regular.ttf"), self.FONT_SIZE)
-                except:
-                    BIOS.dprint("Failed to load FiraCode-Regular.ttf")
-            except:
-                FONT = pygame.font.SysFont("monotype", self.FONT_SIZE)
-                BIOS.dprint("Failed to download FiraCode-Regular.ttf ")
-            STANDALONE = True
 
     def load_history(self):
         # Loads all saved history
@@ -336,12 +262,11 @@ class Terminal(pygame.sprite.Sprite):
         elif self.cursor_blinking == False:
             cursor_char = "_"
         if checkY == False:
-            global FONT
             self.blit_text(DISPLAYSURF, self.current_display +
-                           f'~$ {self.current_input}' + cursor_char + "\n", (5, self.user_y_offset), FONT, TERMINAL.WHITE)
+                           f'~$ {self.current_input}' + cursor_char + "\n", (5, self.user_y_offset), self.FONT, TERMINAL.WHITE)
         else:
             self.blit_text(DISPLAYSURF, self.current_display +
-                           f'~$ {self.current_input}' + cursor_char + "\n", (5, self.y_offset), FONT, TERMINAL.WHITE, True)
+                           f'~$ {self.current_input}' + cursor_char + "\n", (5, self.y_offset), self.FONT, TERMINAL.WHITE, True)
 
     def down_history(self):
         TERMINAL.history_count += 1
@@ -452,18 +377,27 @@ class Terminal(pygame.sprite.Sprite):
         self.save_history() # Runs after any commands are ran
 
     def load_programs(self):
-        # import all py scripts in the /programs folder and add them to the list of valid programs
+        # import all py scripts in the assets/programs folder and add them to the list of valid programs
         self.programs = []
-        for file in os.listdir(resource_path("programs")):
+        for file in os.listdir(resource_path("assets/programs")):
             if file.endswith(".py"):
                 self.programs.append(file.replace(".py", ""))
                 BIOS.dprint("Loaded program: " + file.replace(".py", ""))
+        if os.path.exists(resource_path("assets/data/external_programs")):
+            for file in os.listdir(resource_path("assets/data/external_programs")):
+                if file.endswith(".py"):
+                    self.programs.append(file.replace(".py", ""))
+                    BIOS.dprint("Loaded external program: " + file.replace(".py", ""))
 
     def run_program(self, program, params, flags):
-        # run a program from the /programs folder
+        # run a program from the assets/programs folder
         try:
-            program_module = importlib.import_module(
-                "programs." + program)
+            try:
+                program_module = importlib.import_module(
+                    "assets.programs." + program)
+            except ModuleNotFoundError:
+                program_module = importlib.import_module(
+                    "assets.data.external_programs." + program)
             return_text = program_module.run(self, params, flags)
             return return_text
         except ModuleNotFoundError:
@@ -477,8 +411,12 @@ class Terminal(pygame.sprite.Sprite):
     def get_program_metadata(self, program):
         # get the metadata for a program
         try:
-            program_module = importlib.import_module(
-                "programs." + program)
+            try:
+                program_module = importlib.import_module(
+                    "assets.programs." + program)
+            except ModuleNotFoundError:
+                program_module = importlib.import_module(
+                    "assets.data.external_programs." + program)
             try:
                 tmp = program_module.metadata
                 return tmp
@@ -491,7 +429,7 @@ class Terminal(pygame.sprite.Sprite):
     def clear(self):
         self.current_display = ""
         self.blit_text(DISPLAYSURF, self.current_display,
-                       (5, 5), FONT, TERMINAL.WHITE)
+                       (5, 5), self.FONT, TERMINAL.WHITE)
         self.y_offset = 5
         self.user_y_offset = 5
 
