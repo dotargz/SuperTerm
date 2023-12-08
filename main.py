@@ -405,7 +405,7 @@ class Terminal(pygame.sprite.Sprite):
         except ModuleNotFoundError:
             return_text = f"Error: Program '{program}' not found.\n"
             return return_text
-        except OSNotSupported:
+        except OSNotSupported as e:
             return_text = f"Error: Program '{program}' not supported on this OS.\n"
             return_text += f"Error: {e}\n"
             return return_text
@@ -596,14 +596,10 @@ while Running:
 
     DISPLAYSURF.fill(TERMINAL.NOTBLACK)
 
-    INBOOTSCREEN = False
     if INBIOS == False:
         TERMINAL.update()
     else:
-        if INBOOTSCREEN == True:
-            BOOTSCREEN.update()
-        else:
-            BIOS.update()
+        BIOS.update()
 
     SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF.get_size()
 
