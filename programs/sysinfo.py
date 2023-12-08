@@ -11,12 +11,36 @@ import psutil
 
 metadata = {
     "name": "sysinfo",
-    "description": "Lists system information",
+    "description": "List system information like license, version, as well as a list of hardware on the system.",
     "version": "1.0.0",
     "author": "dotargz",
-    "dependencies": ['os'],
+    "dependencies": [],
     "superterm_version": ">=2.0.0",
     "usage": "sysinfo <license|version|hardware>",
+    "arguments": {
+        "license": "Display the license for SuperTerm",
+        "version": "Display the version of SuperTerm",
+        "hardware": "Display hardware information",
+    },
+    "examples": [
+        {
+            "description": "Display the license for SuperTerm",
+            "command": "sysinfo license",
+        },
+        {
+            "description": "Display the version of SuperTerm",
+            "command": "sysinfo version",
+        },
+    ],
+    "license": "MIT",
+    "repository": "https://github.com/dotargz/SuperTerm/",
+    "Issues": "https://github.com/dotargz/SuperTerm/issues",
+    "maintainers": [
+        {
+            "name": "dotargz",
+            "email": "me@blueskye.dev",
+        },
+    ],
 }
 
 def run(system, command_params, command_flags):
