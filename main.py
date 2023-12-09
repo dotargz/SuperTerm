@@ -32,6 +32,9 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+# create assets/data folder if it doesn't exist
+if not os.path.exists(resource_path("assets/data")):
+    os.makedirs(resource_path("assets/data"))
 
 # Variable Setup (ONLY FOR FULL CLIENT)
 DISPLAYSURF = pygame.display.set_mode((952, 480), pygame.RESIZABLE)
