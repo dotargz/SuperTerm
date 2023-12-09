@@ -17,13 +17,13 @@ import datetime
 import random
 import importlib
 
+
+
 # HAS TO BE DONE FIRST
 pygame.init()
 
 # for compiling the program
 def resource_path(relative_path):
-    if sys.platform == 'win32':
-        relative_path = relative_path.replace("/", "\\")
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -410,7 +410,7 @@ class Terminal(pygame.sprite.Sprite):
             return return_text
         except OSNotSupported as e:
             return_text = f"Error: Program '{program}' not supported on this OS.\n"
-            return_text += f"Error: {e}\n"
+            return_text += f"Error: {"e"}\n"
             return return_text
 
     def get_program_metadata(self, program):
